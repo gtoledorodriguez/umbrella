@@ -4,8 +4,8 @@ require "dotenv/load"
 
 puts "========================================\n    Will you need an umbrella today?    \n========================================"
 puts "Where are you?"
-user_location = gets.chomp.gsub(" ", "%20")
-#user_location = "Chicago"
+#user_location = gets.chomp.gsub(" ", "%20")
+user_location = "Chicago"
 puts "Checking the weather at #{user_location.gsub("%20", " ")}...."
 
 map_key = ENV.fetch("GMAPS_KEY")
@@ -20,6 +20,16 @@ geo = first_result.fetch("geometry")
 location = geo.fetch("location")
 latitude = location.fetch("lat")
 longitude = location.fetch("lng")
-pp latitude
-pp longitude
-# pirate_weather_url = "https://api.pirateweather.net/forecast/"+pirate_weather_key+"/"+latitude+","+longitude
+
+puts "Your coordinates are #{latitude}, #{longitude}"
+
+pirate_weather_url = "https://api.pirateweather.net/forecast/#{pirate_weather_key}/#{latitude},#{longitude}"
+
+raw_pirate_weather_data = HTTP.get(pirate_weather_url)
+parsed_pirate_weather_data = JSON.parse(raw_pirate_weather_data)
+currently = parsed_pirate_weather_data.fetch("currently")
+current_temp = currently.fetch("temperature")
+puts "It is currently #{current_temp}°F"
+
+pp parsed_pirate_weather_data.keys
+puts "Next hour: #{}"
